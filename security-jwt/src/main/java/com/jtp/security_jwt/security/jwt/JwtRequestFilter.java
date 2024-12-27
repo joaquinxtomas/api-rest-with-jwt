@@ -1,7 +1,6 @@
 package com.jtp.security_jwt.security.jwt;
 
 import com.jtp.security_jwt.security.jwt.JWTUtility;
-import com.jtp.security_jwt.security.service.UserDetailsServiceImpl;
 import jakarta.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,7 +32,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
     private JWTUtility jwtTokenUtil;
 
     @Autowired
-    private com.jtp.security_jwt.security.service.UserDetailsServiceImpl userDetailsService;
+    private com.jtp.security_jwt.service.UserDetailsServiceImpl userDetailsService;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request,

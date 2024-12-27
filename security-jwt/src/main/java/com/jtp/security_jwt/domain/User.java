@@ -2,15 +2,33 @@ package com.jtp.security_jwt.domain;
 
 import jakarta.persistence.*;
 
+import java.util.Set;
+
 @Entity
 @Table(name = "app_users")
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
+
+    @Column
     private String username;
+    @Column
     private String email;
+    @Column
     private String password;
+
+    @ManyToMany(fetch=FetchType.EAGER, cascade=CascadeType.ALL)
+    @JoinTable(name="USER_ROLES",
+            joinColumns = {
+            @JoinColumn(name = "USER_ID")
+            },
+            inverseJoinColumns = {
+            @JoinColumn(name = "ROLE_ID")
+            }
+    )
+    private Set<Role> roles;
+
 
     public User() {
     }
@@ -47,6 +65,14 @@ public class User {
 
     public String getPassword() {
         return password;
+    }
+
+    public Set<Role> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(Set<Role> roles) {
+        this.roles = roles;
     }
 
     public void setPassword(String password) {

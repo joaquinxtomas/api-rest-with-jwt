@@ -7,15 +7,13 @@ import com.jtp.security_jwt.security.payload.JwtResponse;
 import com.jtp.security_jwt.security.payload.LoginRequest;
 import com.jtp.security_jwt.security.payload.MessageResponse;
 import com.jtp.security_jwt.security.payload.RegisterRequest;
-import com.jtp.security_jwt.security.service.UserDetailsServiceImpl;
+import com.jtp.security_jwt.service.UserDetailsServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -77,7 +75,6 @@ public class AuthController {
                     .body(new MessageResponse("Error: Email is already in use!"));
         }
 
-        // Create new user's account
         User user = new User(signUpRequest.getUsername(),
                 signUpRequest.getEmail(),
                 encoder.encode(signUpRequest.getPassword()));
