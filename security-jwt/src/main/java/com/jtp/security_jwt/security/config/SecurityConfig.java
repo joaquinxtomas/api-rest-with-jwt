@@ -20,6 +20,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 @Configuration
 @EnableWebSecurity
+@Lazy
 public class SecurityConfig {
 
     @Autowired
@@ -27,6 +28,9 @@ public class SecurityConfig {
 
     @Autowired
     private JwtAuthEntryPoint unauthorizedHandler;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     @Bean
     public JwtRequestFilter authenticationJwtTokenFilter() {
@@ -38,16 +42,12 @@ public class SecurityConfig {
         return authenticationConfiguration.getAuthenticationManager();
     }
 
-    @Bean
-    public PasswordEncoder passwordEncoder(){
-        return new BCryptPasswordEncoder();
-    }
 
     @Bean
     public DaoAuthenticationProvider authenticationProvider(){
         DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
         authProvider.setUserDetailsService(userDetailsService);
-        authProvider.setPasswordEncoder(passwordEncoder());
+        authProvider.setPasswordEncoder(passwordEncoder);
         return authProvider;
     }
 
@@ -57,7 +57,10 @@ public class SecurityConfig {
                 .exceptionHandling(excHandling -> excHandling.authenticationEntryPoint(unauthorizedHandler))
                 .sessionManagement(sessMang -> sessMang.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/error","/api/auth/**").permitAll()
+                        .requestMatchers("/error","/api/auth/register" , "api/auth/login").permitAll()
+                        .requestMatchers("/api/auth/hello-admin").hasRole("ADMIN")
+                        .requestMatchers("api/auth/hello-users").hasRole("USER")
+                        .requestMatchers("api/auth/hello-admin-users").hasAnyRole("USER", "ADMIN")
                         .requestMatchers("/swagger-ui/**").permitAll()
                         .requestMatchers("/api/user/**").permitAll()
                         .anyRequest().authenticated()

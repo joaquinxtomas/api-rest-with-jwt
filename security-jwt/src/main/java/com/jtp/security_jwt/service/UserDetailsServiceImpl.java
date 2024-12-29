@@ -21,13 +21,15 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
     Logger log = LoggerFactory.getLogger(UserDetailsServiceImpl.class);
 
-    private PasswordEncoder passwordEncoder;
+    private final PasswordEncoder passwordEncoder;
+    private final UserRepository userRepo;
+    private final RoleService roleService;
 
-    @Autowired
-    private UserRepository userRepo;
-
-    @Autowired
-    private RoleService roleService;
+    public UserDetailsServiceImpl(PasswordEncoder passwordEncoder, UserRepository userRepo, RoleService roleService) {
+        this.passwordEncoder = passwordEncoder;
+        this.userRepo = userRepo;
+        this.roleService = roleService;
+    }
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -54,7 +56,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
         user.setPassword(passwordEncoder.encode(user.getPassword()));
 
-        Role role = roleService.findByName("USER");
+        Role role = roleService.findByName("ROLE_USER");
         Set<Role> roleSet = new HashSet<>();
         roleSet.add(role);
 

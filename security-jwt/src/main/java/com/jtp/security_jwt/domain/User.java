@@ -1,5 +1,6 @@
 package com.jtp.security_jwt.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 import java.util.Set;
@@ -16,9 +17,10 @@ public class User {
     @Column
     private String email;
     @Column
+    @JsonIgnore
     private String password;
 
-    @ManyToMany(fetch=FetchType.EAGER, cascade=CascadeType.ALL)
+    @ManyToMany(fetch=FetchType.EAGER, cascade=CascadeType.PERSIST)
     @JoinTable(name="USER_ROLES",
             joinColumns = {
             @JoinColumn(name = "USER_ID")
@@ -28,10 +30,6 @@ public class User {
             }
     )
     private Set<Role> roles;
-
-
-    public User() {
-    }
 
     public User(String username, String email, String password) {
         this.username = username;
