@@ -10,4 +10,6 @@ class SecurityJwtApplicationTests {
 	void contextLoads() {
 	}
 
+
+
 }

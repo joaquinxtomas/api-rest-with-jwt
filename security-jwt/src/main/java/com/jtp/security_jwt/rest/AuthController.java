@@ -9,7 +9,9 @@ import com.jtp.security_jwt.security.payload.JwtResponse;
 import com.jtp.security_jwt.security.payload.LoginRequest;
 import com.jtp.security_jwt.security.payload.MessageResponse;
 import com.jtp.security_jwt.security.payload.RegisterRequest;
+import com.jtp.security_jwt.service.RoleService;
 import com.jtp.security_jwt.service.UserDetailsServiceImpl;
+import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,12 +20,15 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Optional;
 import java.util.Set;
 
 @RestController
@@ -53,21 +58,19 @@ public class AuthController {
 
     Logger log = LoggerFactory.getLogger(AuthController.class);
 
-    @PostMapping("/login")
-    public ResponseEntity<JwtResponse> login(@RequestBody LoginRequest loginRequest){
+    @PostMapping("/authenticate")
+    public ResponseEntity<JwtResponse> login(@Valid @RequestBody LoginRequest loginRequest){
 
-        try{
-            authManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword())
-            );
-        } catch(AuthenticationException e){
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-        }
+        final Authentication authentication = authManager.authenticate(
+                new UsernamePasswordAuthenticationToken(
+                        loginRequest.getUsername(),
+                        loginRequest.getPassword()
+                )
+        );
 
-        final UserDetails userDetails = userDetailsService.loadUserByUsername(loginRequest.getUsername());
-        final String jwt = jwtUtility.generateToken(userDetails);
-
-        return ResponseEntity.ok(new JwtResponse(jwt));
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+        final String token = jwtUtility.generateToken(authentication);
+        return ResponseEntity.ok(new JwtResponse(token));
 
     }
 
@@ -86,11 +89,13 @@ public class AuthController {
                     .body(new MessageResponse("Error: Email is already in use!"));
         }
 
+        String hashedPass = passwordEncoder.encode(signUpRequest.getPassword());
+
         User user = new User(signUpRequest.getUsername(),
                 signUpRequest.getEmail(),
-                passwordEncoder.encode(signUpRequest.getPassword()));
+                hashedPass);
 
-        Role defaultRole = roleRepo.findRoleByName("USER");
+        Role defaultRole = roleRepo.findRoleByName("ROLE_USER");
 
         user.setRoles(Set.of(defaultRole));
 

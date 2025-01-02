@@ -3,13 +3,14 @@ package com.jtp.security_jwt.domain;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
 @Table(name = "app_users")
 public class User {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column
@@ -20,7 +21,7 @@ public class User {
     @JsonIgnore
     private String password;
 
-    @ManyToMany(fetch=FetchType.EAGER, cascade=CascadeType.PERSIST)
+    @ManyToMany(fetch=FetchType.EAGER)
     @JoinTable(name="USER_ROLES",
             joinColumns = {
             @JoinColumn(name = "USER_ID")
@@ -29,7 +30,10 @@ public class User {
             @JoinColumn(name = "ROLE_ID")
             }
     )
-    private Set<Role> roles;
+    private Set<Role> roles = new HashSet<>();
+
+    public User() {
+    }
 
     public User(String username, String email, String password) {
         this.username = username;
