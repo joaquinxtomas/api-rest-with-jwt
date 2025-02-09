@@ -3,6 +3,7 @@ package com.jtp.security_jwt.domain;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -21,6 +22,10 @@ public class User {
     @JsonIgnore
     private String password;
 
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column
+    private Date createdAt;
+
     @ManyToMany(fetch=FetchType.EAGER)
     @JoinTable(name="USER_ROLES",
             joinColumns = {
@@ -35,10 +40,11 @@ public class User {
     public User() {
     }
 
-    public User(String username, String email, String password) {
+    public User(String username, String email, String password, Date createdAt) {
         this.username = username;
         this.email = email;
         this.password = password;
+        this.createdAt = createdAt;
     }
 
     public Long getId() {
@@ -79,6 +85,14 @@ public class User {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public Date getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(Date createdAt) {
+        this.createdAt = createdAt;
     }
 
     @Override

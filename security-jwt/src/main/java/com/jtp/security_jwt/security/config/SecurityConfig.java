@@ -61,12 +61,18 @@ public class SecurityConfig{
                 .exceptionHandling(excHandling -> excHandling.authenticationEntryPoint(unauthorizedHandler))
                 .sessionManagement(sessMang -> sessMang.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/error","/api/auth/register" , "/api/auth/authenticate").permitAll()
-                        .requestMatchers("/api/auth/hello-admin").hasRole("ADMIN")
-                        .requestMatchers("/api/auth/hello-users").hasRole("USER")
-                        .requestMatchers("/api/auth/hello-admin-users").hasAnyRole("USER", "ADMIN")
-                        .requestMatchers("/swagger-ui/**").permitAll()
-                        .requestMatchers("/api/user/**").permitAll()
+                        .requestMatchers("/error").permitAll()
+                        .requestMatchers("/api/auth/**").permitAll()
+                        .requestMatchers("/api/access/hello-admin").hasRole("ADMIN")
+                        .requestMatchers("/api/access/hello-user").hasRole("USER")
+                        .requestMatchers("/api/access/hello-admin-user").hasAnyRole("USER", "ADMIN")
+                        .requestMatchers(
+                                "/doc/swagger-ui.html",
+                                "/doc/swagger-ui/**",
+                                "/v3/api-docs/**",
+                                "/v3/api-docs"
+                        ).permitAll()
+                        .requestMatchers("/api/user/**").hasRole("ADMIN")
                         .anyRequest().authenticated()
                 );
         http.addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);
