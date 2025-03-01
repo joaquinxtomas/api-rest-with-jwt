@@ -1,5 +1,5 @@
 <h1>Authentication API with Spring Boot</h1>
-<p><strong>🔗 Swagger UI:</strong> <a href="http://localhost:8080/swagger-ui.html" target="_blank">http://localhost:8080/swagger-ui.html</a></p>
+<p><strong>🔗 Swagger UI:</strong> <a target="_blank" href="http://localhost:8080/swagger-ui.html" target="_blank">http://localhost:8080/swagger-ui.html</a></p>
 
 
 <p>This is an authentication API that uses JWT for user authentication, with ADMIN and USER roles implemented in Spring Boot and Spring Security. The database used is PostgreSQL.</p>
