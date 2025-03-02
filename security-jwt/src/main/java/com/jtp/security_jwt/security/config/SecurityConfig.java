@@ -57,6 +57,7 @@ public class SecurityConfig{
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.authenticationProvider(authenticationProvider())
+                .cors(cors -> cors.configure(http))
                 .csrf(csrf -> csrf.disable())
                 .exceptionHandling(excHandling -> excHandling.authenticationEntryPoint(unauthorizedHandler))
                 .sessionManagement(sessMang -> sessMang.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
@@ -67,7 +68,7 @@ public class SecurityConfig{
                         .requestMatchers("/api/access/hello-user").hasRole("USER")
                         .requestMatchers("/api/access/hello-admin-user").hasAnyRole("USER", "ADMIN")
                         .requestMatchers(
-                                "/doc/swagger-ui.html",
+                                "/doc/swagger-ui/index.html",
                                 "/doc/swagger-ui/**",
                                 "/v3/api-docs/**",
                                 "/v3/api-docs"
