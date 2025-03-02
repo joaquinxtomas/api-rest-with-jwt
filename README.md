@@ -1,7 +1,16 @@
 <h1>Authentication API with Spring Boot</h1>
 <p><strong>🔗 Swagger UI:</strong> <a target="_blank" href="http://localhost:8080/swagger-ui.html" target="_blank">http://localhost:8080/swagger-ui.html</a></p>
 
+<h2>How to use the Swagger documentation?</h2>
+<p>
+   * After launching the application, go to the Swagger path. There, click on the registration endpoint, then press the "Try it out" button followed by "Execute". The default username and password will both       be "string". Using these credentials, you will be able to log in.
 
+   *At the login endpoint, follow the same procedure. It will return a JWT token.
+
+   *You must enter this token in the "Authorize" button at the top of the documentation. This will grant access to the standard user functionalities.
+</p>
+
+<h2>API description</h2>
 <p>This is an authentication API that uses JWT for user authentication, with ADMIN and USER roles implemented in Spring Boot and Spring Security. The database used is PostgreSQL.</p>
 
    <h2>Prerequisites</h2>
@@ -17,7 +26,7 @@
    <h3>2. Start the Application</h3>
     <p>To start the application, run the following command in the root of the project:</p>
     <pre><code>
-    ./mvnw spring-boot:run
+       mvn spring-boot:run
     </code></pre>
 
    <h2>Endpoints</h2>
